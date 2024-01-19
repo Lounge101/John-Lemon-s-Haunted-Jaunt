@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameEnding : MonoBehaviour
 {
     public float fadeDuration = 1f;
+    public float displayImageDuration = 1f;
     public GameObject player;
     bool m_IsPlayerAtExit;
     public CanvasGroup exitBackgroundImageCanvasGroup;
@@ -23,11 +24,17 @@ public class GameEnding : MonoBehaviour
         {
             EndLevel();
         }
+
+        if(m_Timer > fadeDuration + displayImageDuration)
+        {
+            Application.Quit();
+        }
     }
 
     void EndLevel()
     {
-
+        m_Timer += Time.deltaTime;
+        exitBackgroundImageCanvasGroup.alpha = m_Timer / fadeDuration;
     }
 
     void OnTriggerEnter(Collider other)

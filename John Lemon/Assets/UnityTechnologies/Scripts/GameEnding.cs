@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameEnding : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class GameEnding : MonoBehaviour
     bool m_IsPlayerAtExit;
     public CanvasGroup exitBackgroundImageCanvasGroup;
     float m_Timer;
+    public CanvasGroup caughtBackroundImageCanvasGroup;
+    bool m_IsPlayerCuaght;
 
     // Start is called before the first frame update
     void Start()
@@ -22,19 +25,33 @@ public class GameEnding : MonoBehaviour
     {
         if(m_IsPlayerAtExit)
         {
-            EndLevel();
+            EndLevel(exitBackgroundImageCanvasGroup, false);
         }
 
-        if(m_Timer > fadeDuration + displayImageDuration)
+        if(m_IsPlayerCuaght)
         {
-            Application.Quit();
+            EndLevel (caughtBackroundImageCanvasGroup, true);
         }
     }
 
-    void EndLevel()
+    void EndLevel(CanvasGroup imageCanvasGroup, bool doRestart)
     {
         m_Timer += Time.deltaTime;
         exitBackgroundImageCanvasGroup.alpha = m_Timer / fadeDuration;
+
+        if(m_Timer > fadeDuration + displayImageDuration)
+        {
+            Application.Quit ();
+        }
+
+        if (doRestart)
+        {
+            SceneManager.LoadScene(0);
+        }
+        else
+        {
+            Application.Quit ();
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -44,4 +61,10 @@ public class GameEnding : MonoBehaviour
             m_IsPlayerAtExit = true;
         }
     }
+
+    public void CaughtPlayer ()
+    {
+        m_IsPlayerCuaght = true;
+    }
+
 }
